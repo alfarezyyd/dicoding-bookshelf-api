@@ -69,8 +69,8 @@ function getBookHandler(request, h) {
 }
 
 function getBookByIdHandler(request, h) {
-  const {id} = request.params;
-  const searchedBook = books.filter((book) => book.id === id)[0];
+  const {bookId} = request.params;
+  const searchedBook = books.filter((book) => book.id === bookId)[0];
   if (searchedBook === undefined) {
     const response = h.response({
       status: "fail",
@@ -88,4 +88,64 @@ function getBookByIdHandler(request, h) {
   }
 }
 
-export {addBookHandler, getBookHandler, getBookByIdHandler};
+function updateBookHandler(request, h) {
+  const {bookId} = request.params;
+  const {
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading
+  } = request.payload;
+  if (name === undefined) {
+    const response = h.response({
+      status: "fail",
+      message: "Gagal memperbarui buku. Mohon isi nama buku"
+    })
+    response.code(400);
+    return response;
+  }
+  if (readPage > pageCount) {
+    const response = h.response({
+      status: "fail",
+      message: "Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount"
+    })
+    response.code(400);
+    return response;
+  }
+  const indexOfSearchedBook = books.findIndex((book) => book.id === bookId);
+  if (indexOfSearchedBook === -1) {
+    const response = h.response({
+      status: "fail",
+      message: "Gagal memperbarui buku. Id tidak ditemukan"
+    })
+    response.code(404)
+    return response
+  }
+  const updatedAt = new Date().toISOString();
+  const isFinished = readPage === pageCount;
+  books[indexOfSearchedBook] = {
+    ...books[indexOfSearchedBook],
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    finished: isFinished,
+    reading,
+    updatedAt
+  }
+  const response = h.response({
+    status: 'success',
+    message: 'Buku berhasil diperbarui',
+  });
+  response.code(200);
+  return response;
+}
+
+export {addBookHandler, getBookHandler, getBookByIdHandler, updateBookHandler};
