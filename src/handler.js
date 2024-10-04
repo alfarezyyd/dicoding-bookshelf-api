@@ -20,7 +20,7 @@ function addBookHandler(request, h) {
     pageCount,
     readPage,
     reading);
-  if (name === null) {
+  if (name === undefined) {
     const response = h.response({
       status: 'fail',
       message: 'Gagal menambahkan buku. Mohon isi nama buku'
@@ -70,7 +70,13 @@ function getBookHandler(request, h) {
   return h.response({
     status: 'success',
     data: {
-      books: books
+      books: books.map(value => {
+        return {
+          id: value.id,
+          name: value.name,
+          publisher: value.publisher,
+        }
+      })
     }
   });
 }
