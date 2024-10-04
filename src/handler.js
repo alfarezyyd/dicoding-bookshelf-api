@@ -12,14 +12,6 @@ function addBookHandler(request, h) {
     readPage,
     reading
   } = request.payload;
-  console.log(name,
-    year,
-    author,
-    summary,
-    publisher,
-    pageCount,
-    readPage,
-    reading);
   if (name === undefined) {
     const response = h.response({
       status: 'fail',
@@ -67,10 +59,30 @@ function addBookHandler(request, h) {
 }
 
 function getBookHandler(request, h) {
+  const name = request.query.name;
+  let payloadBook = books
+  if (name !== undefined) {
+    payloadBook = payloadBook.filter(value => {
+      return value.name.toLowerCase().includes(name.toLowerCase());
+    })
+  }
+  const reading = request.query.reading;
+  if (reading !== undefined) {
+    payloadBook = payloadBook.filter(value => {
+      return value.reading === (Number(reading) !== 0);
+    })
+  }
+  const finished = request.query.finished;
+  if (finished !== undefined) {
+    payloadBook = payloadBook.filter(value => {
+      return value.finished === (Number(finished) !== 0);
+    })
+  }
+
   return h.response({
     status: 'success',
     data: {
-      books: books.map(value => {
+      books: payloadBook.map(value => {
         return {
           id: value.id,
           name: value.name,
@@ -181,5 +193,6 @@ function deleteBookHandler(request, h) {
     return response;
   }
 }
+
 
 module.exports = {addBookHandler, getBookHandler, getBookByIdHandler, updateBookHandler, deleteBookHandler};
