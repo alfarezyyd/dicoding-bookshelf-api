@@ -1,5 +1,6 @@
 import {books} from "./model";
 import {nanoid} from "nanoid";
+import {server} from "@hapi/hapi";
 
 function addBookHandler(request, h) {
   const {
@@ -67,4 +68,22 @@ function getBookHandler(request, h) {
   })
 }
 
-export {addBookHandler, getBookHandler};
+function getBookByIdHandler(request, h) {
+  const {id} = request.params;
+  const searchedBook = books.filter((book) => book.id === id)[0];
+  if (searchedBook === undefined) {
+    return h.response({
+      status: "fail",
+      message: "Buku tidak ditemukan"
+    })
+  } else {
+    return h.response({
+      status: "success",
+      data: {
+        book: searchedBook
+      }
+    })
+  }
+}
+
+export {addBookHandler, getBookHandler, getBookByIdHandler};
