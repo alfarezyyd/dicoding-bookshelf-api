@@ -1,5 +1,5 @@
 const books = require('./model');
-const {nanoid} = require('nanoid');
+const { nanoid } = require('nanoid');
 
 function addBookHandler(request, h) {
   const {
@@ -60,41 +60,41 @@ function addBookHandler(request, h) {
 
 function getBookHandler(request, h) {
   const name = request.query.name;
-  let payloadBook = books
+  let payloadBook = books;
   if (name !== undefined) {
-    payloadBook = payloadBook.filter(value => {
+    payloadBook = payloadBook.filter((value) => {
       return value.name.toLowerCase().includes(name.toLowerCase());
-    })
+    });
   }
   const reading = request.query.reading;
   if (reading !== undefined) {
-    payloadBook = payloadBook.filter(value => {
+    payloadBook = payloadBook.filter((value) => {
       return value.reading === (Number(reading) !== 0);
-    })
+    });
   }
   const finished = request.query.finished;
   if (finished !== undefined) {
-    payloadBook = payloadBook.filter(value => {
+    payloadBook = payloadBook.filter((value) => {
       return value.finished === (Number(finished) !== 0);
-    })
+    });
   }
 
   return h.response({
     status: 'success',
     data: {
-      books: payloadBook.map(value => {
+      books: payloadBook.map((value) => {
         return {
           id: value.id,
           name: value.name,
           publisher: value.publisher,
-        }
+        };
       })
     }
   });
 }
 
 function getBookByIdHandler(request, h) {
-  const {bookId} = request.params;
+  const { bookId } = request.params;
   const searchedBook = books.filter((book) => book.id === bookId)[0];
   if (searchedBook === undefined) {
     const response = h.response({
@@ -114,7 +114,7 @@ function getBookByIdHandler(request, h) {
 }
 
 function updateBookHandler(request, h) {
-  const {bookId} = request.params;
+  const { bookId } = request.params;
   const {
     name,
     year,
@@ -174,7 +174,7 @@ function updateBookHandler(request, h) {
 }
 
 function deleteBookHandler(request, h) {
-  const {bookId} = request.params;
+  const { bookId } = request.params;
   const searchedBookId = books.findIndex((book) => book.id === bookId);
   if (searchedBookId === -1) {
     const response = h.response({
@@ -195,4 +195,4 @@ function deleteBookHandler(request, h) {
 }
 
 
-module.exports = {addBookHandler, getBookHandler, getBookByIdHandler, updateBookHandler, deleteBookHandler};
+module.exports = { addBookHandler, getBookHandler, getBookByIdHandler, updateBookHandler, deleteBookHandler };
