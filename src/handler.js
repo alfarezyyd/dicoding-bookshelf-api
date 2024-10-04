@@ -1,5 +1,5 @@
 const books = require('./model');
-const nanoid = require('nanoid');
+const {nanoid} = require('nanoid');
 
 function addBookHandler(request, h) {
   const {
@@ -12,6 +12,14 @@ function addBookHandler(request, h) {
     readPage,
     reading
   } = request.payload;
+  console.log(name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading);
   if (name === null) {
     const response = h.response({
       status: 'fail',
@@ -68,7 +76,7 @@ function getBookHandler(request, h) {
 }
 
 function getBookByIdHandler(request, h) {
-  const { bookId } = request.params;
+  const {bookId} = request.params;
   const searchedBook = books.filter((book) => book.id === bookId)[0];
   if (searchedBook === undefined) {
     const response = h.response({
@@ -88,7 +96,7 @@ function getBookByIdHandler(request, h) {
 }
 
 function updateBookHandler(request, h) {
-  const { bookId } = request.params;
+  const {bookId} = request.params;
   const {
     name,
     year,
@@ -148,7 +156,7 @@ function updateBookHandler(request, h) {
 }
 
 function deleteBookHandler(request, h) {
-  const { bookId } = request.params;
+  const {bookId} = request.params;
   const searchedBookId = books.findIndex((book) => book.id === bookId);
   if (searchedBookId === -1) {
     const response = h.response({
@@ -168,4 +176,4 @@ function deleteBookHandler(request, h) {
   }
 }
 
-module.exports = { addBookHandler, getBookHandler, getBookByIdHandler, updateBookHandler, deleteBookHandler };
+module.exports = {addBookHandler, getBookHandler, getBookByIdHandler, updateBookHandler, deleteBookHandler};
