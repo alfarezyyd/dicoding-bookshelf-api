@@ -72,10 +72,12 @@ function getBookByIdHandler(request, h) {
   const {id} = request.params;
   const searchedBook = books.filter((book) => book.id === id)[0];
   if (searchedBook === undefined) {
-    return h.response({
+    const response = h.response({
       status: "fail",
       message: "Buku tidak ditemukan"
     })
+    response.code(404)
+    return response;
   } else {
     return h.response({
       status: "success",
