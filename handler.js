@@ -58,4 +58,13 @@ function addBookHandler(request, h) {
   return response;
 }
 
-export {addBookHandler}
+function getBookHandler(request, h) {
+  return h.response({
+    status: "success",
+    data: {
+      books: books
+    }
+  })
+}
+
+export {addBookHandler, getBookHandler};
