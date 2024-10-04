@@ -148,4 +148,25 @@ function updateBookHandler(request, h) {
   return response;
 }
 
-export {addBookHandler, getBookHandler, getBookByIdHandler, updateBookHandler};
+function deleteBookHandler(request, h) {
+  const {bookId} = request.params;
+  const searchedBookId = books.findIndex((book) => book.id === bookId);
+  if (searchedBookId === -1) {
+    const response = h.response({
+      status: "fail",
+      message: "Buku gagal dihapus. Id tidak ditemukan"
+    });
+    response.code(404)
+    return response;
+  } else {
+    books.splice(searchedBookId, 1);
+    const response = h.response({
+      status: "success",
+      message: "Buku berhasil dihapus"
+    });
+    response.code(200);
+    return response;
+  }
+}
+
+export {addBookHandler, getBookHandler, getBookByIdHandler, updateBookHandler, deleteBookHandler};
